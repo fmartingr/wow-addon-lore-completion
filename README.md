@@ -6,6 +6,17 @@ WoW addon for the **WoW Forever** client (patch 1.60.x). It shows how many quest
 
 - **QuestieDB** addon (contract version 4). It supplies all quest data at runtime. This repository contains no QuestieDB data.
 
+## Counting rules
+
+A quest counts for your character when all of these are true:
+
+- QuestieDB knows the quest and the quest has a zone.
+- The quest fits your race and class.
+- The quest is not repeatable, daily, weekly or monthly.
+
+Each quest sits on one map. A subzone does not add to its parent zone.
+Quests have tags: `[Class]`, `[Profession]` and `[Race]`.
+
 ## Development
 
 - `make lint` runs luacheck.

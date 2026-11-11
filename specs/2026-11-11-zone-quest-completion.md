@@ -239,7 +239,7 @@ Commit each task on its own with the repository's commit convention (none exists
   - [ ] Docs and config that describe the changed behavior are updated (`README.md`: purpose, QuestieDB requirement, `make` targets).
   - [ ] Task heading checkbox ticked; changes committed.
 
-### [ ] 2. Quest filter, map index and progress
+### [x] 2. Quest filter, map index and progress
 - **Outcome:** pure modules that answer "which quests are on map X for this character, with which tags, and how many are done".
 - **Depends on:** 1 (namespace, test helpers, QuestieDB fake).
 - **Covers:** AC2, AC3, AC4, AC5 (without the session done cache), risks "race masks above 32 bits", "index build cost", "legacy dungeon UiMapIDs" (index part), "ZoneDB support data missing" (index part).

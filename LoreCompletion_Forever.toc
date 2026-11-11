@@ -7,3 +7,7 @@
 ## SavedVariables: LoreCompletionDB
 ## SavedVariablesPerCharacter: LoreCompletionCharDB
 src\Init.lua
+src\Bits.lua
+src\QuestFilter.lua
+src\QuestIndex.lua
+src\Progress.lua
