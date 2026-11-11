@@ -1,5 +1,9 @@
 # LoreCompletion
 
+<p align="center">
+  <img src="assets/icon-256.png" alt="LoreCompletion icon" width="128">
+</p>
+
 WoW addon for the **WoW Forever** client (patch 1.60.x). It shows how many quests you completed on each map.
 
 ## Requirements
