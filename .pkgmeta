@@ -11,6 +11,5 @@ ignore:
   - assets/icon.png
 optional-dependencies:
   - openmap
-  - memories
 required-dependencies:
   - questiedb
