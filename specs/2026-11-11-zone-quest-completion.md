@@ -272,7 +272,7 @@ Commit each task on its own with the repository's commit convention (none exists
   - [ ] Docs and config that describe the changed behavior are updated (`README.md`: counting rules).
   - [ ] Task heading checkbox ticked; changes committed.
 
-### [ ] 3. Done cache and unknown-quest record
+### [x] 3. Done cache and unknown-quest record
 - **Outcome:** a real `isDone` function and a per-character record of quests that QuestieDB does not know.
 - **Depends on:** 1 (saved variables, `ns.onReady`), 2 (`Progress.For` takes `isDone`).
 - **Covers:** AC5 (session done cache), AC6, risks "`QUEST_TURNED_IN` before flag" and "QuestieDB data not complete" (record part).

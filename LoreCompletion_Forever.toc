@@ -11,3 +11,5 @@ src\Bits.lua
 src\QuestFilter.lua
 src\QuestIndex.lua
 src\Progress.lua
+src\QuestState.lua
+src\Events.lua

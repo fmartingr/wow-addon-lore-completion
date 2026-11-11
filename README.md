@@ -17,6 +17,12 @@ A quest counts for your character when all of these are true:
 Each quest sits on one map. A subzone does not add to its parent zone.
 Quests have tags: `[Class]`, `[Profession]` and `[Race]`.
 
+## Unknown quests
+
+QuestieDB data for Forever is not complete. When you turn in a quest that QuestieDB does not know,
+the addon saves the quest and the map for your character. The count shows as `+N unknown`.
+Unknown quests never change the `done / total` numbers.
+
 ## Development
 
 - `make lint` runs luacheck.
