@@ -4,13 +4,17 @@ local newEnv = require("spec.helpers.env")
 
 local PATHS = {
 	"src/Init.lua",
+	"src/Locale.lua",
 	"src/Bits.lua",
+	"src/QuestLevel.lua",
 	"src/QuestFilter.lua",
 	"src/QuestIndex.lua",
 	"src/Progress.lua",
 	"src/QuestState.lua",
 	"src/Events.lua",
+	"src/ZoneMemory.lua",
 	"src/OverviewModel.lua",
+	"src/GiverModel.lua",
 	"src/OverviewWindow.lua",
 }
 
@@ -19,9 +23,9 @@ describe("OverviewWindow", function()
 	before_each(function()
 		ns, ctx = loader.load(PATHS)
 		local lib = fake({
-			[1] = { name = "A", zoneOrSort = 1 },
-			[2] = { name = "B", zoneOrSort = 1 },
-		}, { areaToMap = { [1] = 10 } })
+			[1] = { name = "A", zoneOrSort = 1, questLevel = 3, startedBy = { { 100 } } },
+			[2] = { name = "B", zoneOrSort = 1, preQuestSingle = { 1 } },
+		}, { areaToMap = { [1] = 10 }, npcs = { [100] = { name = "N", spawns = { [1] = { { 1, 1 } } } } } })
 		env = newEnv(lib, {
 			C_Map = {
 				GetMapInfo = function()
@@ -32,6 +36,9 @@ describe("OverviewWindow", function()
 				end,
 				GetAreaInfo = function() end,
 			},
+			UnitLevel = function()
+				return 20
+			end,
 		})
 		loader.G.LoreCompletionDB, loader.G.LoreCompletionCharDB = nil, nil
 		ns.Init.OnLoad(env)
@@ -78,6 +85,35 @@ describe("OverviewWindow", function()
 		local _, questBox = boxes()
 		assert.equals(2, #questBox.data)
 		assert.equals("???", questBox.data[1].text)
+	end)
+
+	it("colors quest levels by the player level, and by the level-up level", function()
+		ns.Overview.OpenMap(10)
+		local _, questBox = boxes()
+		assert.equals("|cff808080[3]|r", questBox.data[1].levelText)
+		ns.playerLevel = 1
+		ns.RunRefresh()
+		assert.equals("|cffffff00[3]|r", questBox.data[1].levelText)
+	end)
+
+	it("indents a chain step under its prerequisite", function()
+		ns.Overview.OpenMap(10)
+		local _, questBox = boxes()
+		assert.equals(0, questBox.data[1].depth)
+		assert.equals(1, questBox.data[2].depth)
+	end)
+
+	it("a click on a quest pins its giver, and a second click removes the pin", function()
+		ns.Overview.OpenMap(10)
+		local _, questBox = boxes()
+		assert.is_true(questBox.data[1].pinnable)
+		assert.is_false(questBox.data[2].pinnable)
+		ns.Overview.TogglePin(1)
+		assert.is_true(loader.G.LoreCompletionCharDB.pinned[1])
+		assert.is_true(questBox.data[1].pinned)
+		ns.Overview.TogglePin(1)
+		assert.is_nil(loader.G.LoreCompletionCharDB.pinned[1])
+		assert.is_false(questBox.data[1].pinned)
 	end)
 
 	it("OpenMap for a map not in the index opens with no selection", function()

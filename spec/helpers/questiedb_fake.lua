@@ -1,6 +1,13 @@
 -- Fake LibQuestieDB with the documented nil semantics (docs/api.md).
-local NUMERIC =
-	{ requiredRaces = true, requiredClasses = true, zoneOrSort = true, questFlags = true, specialFlags = true }
+local NUMERIC = {
+	requiredRaces = true,
+	requiredClasses = true,
+	zoneOrSort = true,
+	questFlags = true,
+	specialFlags = true,
+	questLevel = true,
+	requiredLevel = true,
+}
 
 local function serialize(map)
 	local parts = {}
@@ -11,7 +18,7 @@ local function serialize(map)
 end
 
 -- quests: { [id] = { name=, zoneOrSort=, ... } }
--- opts: contractOk (false fails the check), areaToMap ({ [areaID] = uiMapID }), zoneData (raw string override)
+-- opts: npcs and objects ({ [id] = { name=, spawns= } }), contractOk (false fails the check), areaToMap ({ [areaID] = uiMapID }), zoneData (raw string override)
 return function(quests, opts)
 	opts = opts or {}
 	local ids = {}
@@ -45,6 +52,23 @@ return function(quests, opts)
 		return out
 	end
 	fake.Quest = Quest
+	local function entity(rows)
+		return {
+			GetAll = function(id, keys)
+				local row = rows[id]
+				if not row then
+					return nil
+				end
+				local out = { n = #keys }
+				for i, key in ipairs(keys) do
+					out[i] = row[key]
+				end
+				return out
+			end,
+		}
+	end
+	fake.Npc = entity(opts.npcs or {})
+	fake.Object = entity(opts.objects or {})
 	fake.Enum = {
 		raceMaskById = {
 			[1] = 1,

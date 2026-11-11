@@ -2,7 +2,7 @@ local loader = require("spec.helpers.load")
 local fake = require("spec.helpers.questiedb_fake")
 local newEnv = require("spec.helpers.env")
 
-local PATHS = { "src/Bits.lua", "src/QuestFilter.lua", "src/QuestIndex.lua" }
+local PATHS = { "src/Bits.lua", "src/QuestLevel.lua", "src/QuestFilter.lua", "src/QuestIndex.lua" }
 
 describe("QuestIndex", function()
 	local ns
@@ -22,6 +22,8 @@ describe("QuestIndex", function()
 		[8] = { name = "H", zoneOrSort = 300 }, -- AreaID not in the map
 		[9] = { name = "I", zoneOrSort = 400 }, -- AreaID maps to 0
 		[10] = { name = "J", zoneOrSort = 100, requiredSkill = { 171, 1 } },
+		[11] = { name = "L", zoneOrSort = 200, preQuestGroup = { 3 } },
+		[94003] = { name = "K", zoneOrSort = 200, questLevel = 42, preQuestSingle = { 3 }, preQuestGroup = { 4 } },
 	}
 	local areaToMap = { [100] = 10, [200] = 20, [201] = 20, [400] = 0 }
 
@@ -42,7 +44,7 @@ describe("QuestIndex", function()
 	it("lists eligible quests by map", function()
 		local index = build()
 		assert.same({ 1, 2, 10 }, ids(index:QuestsOn(10)))
-		assert.same({ 3, 4 }, ids(index:QuestsOn(20)))
+		assert.same({ 3, 4, 11, 94003 }, ids(index:QuestsOn(20)))
 	end)
 
 	it("carries name, tags and areaID", function()
@@ -65,6 +67,22 @@ describe("QuestIndex", function()
 			assert.is_nil(all[id])
 		end
 		assert.same({ 10, 20 }, index:Maps())
+	end)
+
+	it("carries the quest level and the Forever flag", function()
+		local index = build()
+		local classic, forever = index:QuestsOn(20)[1], index:QuestsOn(20)[4]
+		assert.equals(0, classic.level)
+		assert.is_false(classic.forever)
+		assert.equals(42, forever.level)
+		assert.is_true(forever.forever)
+	end)
+
+	it("joins single and group prerequisites", function()
+		local index = build()
+		assert.same({ 3, 4 }, index:QuestsOn(20)[4].pre)
+		assert.same({ 3 }, index:QuestsOn(20)[3].pre)
+		assert.same({}, index:QuestsOn(20)[1].pre)
 	end)
 
 	it("returns an empty list for an unknown or nil map", function()

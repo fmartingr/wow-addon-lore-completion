@@ -3,7 +3,9 @@ local fake = require("spec.helpers.questiedb_fake")
 local newEnv = require("spec.helpers.env")
 
 local PATHS = {
+	"src/Locale.lua",
 	"src/Bits.lua",
+	"src/QuestLevel.lua",
 	"src/QuestFilter.lua",
 	"src/QuestIndex.lua",
 	"src/Progress.lua",

@@ -62,7 +62,7 @@ describe("integration", function()
 		local row = groups[1].maps[1]
 		assert.equals(10, row.uiMapID)
 		assert.equals(1, row.unknown)
-		assert.is_truthy(ns.OverviewModel.MapRowText(row):find("+1 unknown", 1, true))
+		assert.is_truthy(ns.OverviewModel.MapCountText(row):find("+1 unknown", 1, true))
 		assert.equals(10, loader.G.LoreCompletionCharDB.unknownQuests[77])
 	end)
 end)

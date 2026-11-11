@@ -6,17 +6,23 @@
 ## IconTexture: Interface\AddOns\LoreCompletion\assets\icon-256.png
 ## Version: @project-version@
 ## Dependencies: QuestieDB
+## OptionalDeps: OpenMap, Memories
 ## SavedVariables: LoreCompletionDB
 ## SavedVariablesPerCharacter: LoreCompletionCharDB
 src\Init.lua
+src\Locale.lua
 src\Bits.lua
+src\QuestLevel.lua
 src\QuestFilter.lua
 src\QuestIndex.lua
 src\Progress.lua
 src\QuestState.lua
 src\Events.lua
 src\OverviewModel.lua
+src\GiverModel.lua
 src\OverviewWindow.lua
+src\GiverPins.lua
+src\ZoneMemory.lua
 src\TrackerModel.lua
 src\TrackerModule.lua
 src\SettingsPanel.lua

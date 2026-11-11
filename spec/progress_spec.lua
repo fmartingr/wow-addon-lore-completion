@@ -5,7 +5,13 @@ local newEnv = require("spec.helpers.env")
 describe("Progress", function()
 	local ns, index
 	before_each(function()
-		ns = loader.load({ "src/Bits.lua", "src/QuestFilter.lua", "src/QuestIndex.lua", "src/Progress.lua" })
+		ns = loader.load({
+			"src/Bits.lua",
+			"src/QuestLevel.lua",
+			"src/QuestFilter.lua",
+			"src/QuestIndex.lua",
+			"src/Progress.lua",
+		})
 		local lib = fake({
 			[1] = { name = "A", zoneOrSort = 1 },
 			[2] = { name = "B", zoneOrSort = 1 },

@@ -1,6 +1,19 @@
 local _, ns = ...
 
-local KEYS = { "name", "requiredRaces", "requiredClasses", "zoneOrSort", "requiredSkill", "questFlags", "specialFlags" }
+local KEYS = {
+	"name",
+	"requiredRaces",
+	"requiredClasses",
+	"zoneOrSort",
+	"requiredSkill",
+	"questFlags",
+	"specialFlags",
+	"questLevel",
+	"preQuestSingle",
+	"preQuestGroup",
+	"startedBy",
+	"requiredLevel",
+}
 
 local Index = {}
 Index.__index = Index
@@ -8,7 +21,7 @@ Index.__index = Index
 ns.QuestIndex = {}
 
 function ns.QuestIndex.New(env)
-	return setmetatable({ env = env, built = false, byMap = {}, areaFor = {} }, Index)
+	return setmetatable({ env = env, built = false, byMap = {}, areaFor = {}, mapOf = {} }, Index)
 end
 
 local function loadAreaMap(env)
@@ -18,6 +31,19 @@ local function loadAreaMap(env)
 	if ok and type(result) == "table" then
 		return result
 	end
+end
+
+local function preQuests(row)
+	local list = {}
+	for _, key in ipairs({ "preQuestSingle", "preQuestGroup" }) do
+		local field = row[key]
+		if type(field) == "table" then
+			for _, id in ipairs(field) do
+				list[#list + 1] = id
+			end
+		end
+	end
+	return list
 end
 
 -- Built once and lazily: about 4,000 quest reads must stay off the login frame.
@@ -53,6 +79,11 @@ function Index:Build()
 				requiredSkill = v[5],
 				questFlags = v[6],
 				specialFlags = v[7],
+				questLevel = v[8],
+				preQuestSingle = v[9],
+				preQuestGroup = v[10],
+				startedBy = v[11],
+				requiredLevel = v[12],
 			}
 			local eligible, tags = ns.QuestFilter.Evaluate(row, player, allClasses)
 			local uiMapID = areaToMap[row.zoneOrSort]
@@ -63,7 +94,20 @@ function Index:Build()
 					self.byMap[uiMapID] = list
 					self.areaFor[uiMapID] = row.zoneOrSort
 				end
-				list[#list + 1] = { id = id, name = row.name, tags = tags, areaID = row.zoneOrSort }
+				self.mapOf[id] = uiMapID
+				list[#list + 1] = {
+					id = id,
+					name = row.name,
+					tags = tags,
+					areaID = row.zoneOrSort,
+					level = row.questLevel,
+					forever = ns.QuestLevel.IsForever(id),
+					pre = preQuests(row),
+					preSingle = row.preQuestSingle,
+					preGroup = row.preQuestGroup,
+					startedBy = row.startedBy,
+					requiredLevel = row.requiredLevel,
+				}
 			end
 		end
 	end
@@ -72,6 +116,11 @@ end
 function Index:QuestsOn(uiMapID)
 	self:Build()
 	return self.byMap[uiMapID] or {}
+end
+
+function Index:MapOf(questID)
+	self:Build()
+	return self.mapOf[questID]
 end
 
 function Index:Maps()

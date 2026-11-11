@@ -1,17 +1,19 @@
 local _, ns = ...
 
+local L = ns.L
+
 local OPTIONS = {
 	{
 		key = "showTracker",
-		label = "Show tracker module",
+		label = L["Show tracker module"],
 		default = true,
-		tooltip = "Show the Lore module in the Objective Tracker.",
+		tooltip = L["Show the Lore module in the Objective Tracker."],
 	},
 	{
 		key = "hideWhenComplete",
-		label = "Hide when complete",
+		label = L["Hide when complete"],
 		default = false,
-		tooltip = "Hide the module on a map where all quests are done.",
+		tooltip = L["Hide the module on a map where all quests are done."],
 	},
 }
 

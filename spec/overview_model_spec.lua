@@ -3,7 +3,9 @@ local fake = require("spec.helpers.questiedb_fake")
 local newEnv = require("spec.helpers.env")
 
 local PATHS = {
+	"src/Locale.lua",
 	"src/Bits.lua",
+	"src/QuestLevel.lua",
 	"src/QuestFilter.lua",
 	"src/QuestIndex.lua",
 	"src/Progress.lua",
@@ -164,12 +166,90 @@ describe("OverviewModel", function()
 			assert.equals("alpha", ns.OverviewModel.Quests(index, state, 10, true)[1].text)
 		end)
 
+		it("adds a colored level and the Forever flag", function()
+			local _, index, state = setup({
+				[1] = { name = "a", zoneOrSort = 1, questLevel = 30 },
+				[12000] = { name = "b", zoneOrSort = 1, questLevel = 10 },
+			}, { [1] = 10 })
+			local rows = ns.OverviewModel.Quests(index, state, 10, true, { level = 10, greenRange = 5 })
+			assert.equals("|cffff1919[30]|r", rows[1].levelText)
+			assert.is_false(rows[1].forever)
+			assert.equals("|cffffff00[10]|r", rows[2].levelText)
+			assert.is_true(rows[2].forever)
+		end)
+
 		it("builds the tag string in a fixed order", function()
 			local _, index, state = quests()
 			local rows = ns.OverviewModel.Quests(index, state, 10, true)
 			assert.equals("[Class]", rows[1].tags)
 			assert.equals("[Profession] [Race]", rows[2].tags)
 			assert.equals("", rows[4].tags)
+		end)
+	end)
+
+	describe("chains", function()
+		local function chainIDs(rows)
+			local out = {}
+			for _, r in ipairs(rows) do
+				table.insert(out, r.id .. ":" .. r.depth)
+			end
+			return out
+		end
+
+		it("lists chain steps after their prerequisite, with depth", function()
+			local _, index, state = setup({
+				[1] = { name = "Crown", zoneOrSort = 1 },
+				[2] = { name = "Crown", zoneOrSort = 1, preQuestSingle = { 1 } },
+				[3] = { name = "Crown", zoneOrSort = 1, preQuestSingle = { 2 } },
+				[4] = { name = "Apple", zoneOrSort = 1 },
+				[5] = { name = "Branch", zoneOrSort = 1, preQuestGroup = { 1 } },
+			}, { [1] = 10 })
+			local rows = ns.OverviewModel.Quests(index, state, 10, true)
+			assert.same({ "4:0", "1:0", "5:1", "2:1", "3:2" }, chainIDs(rows))
+		end)
+
+		it("starts a chain at a quest whose prerequisite is on another map", function()
+			local _, index, state = setup({
+				[1] = { name = "A", zoneOrSort = 2 },
+				[2] = { name = "B", zoneOrSort = 1, preQuestSingle = { 1, 99 } },
+			}, { [1] = 10, [2] = 20 })
+			assert.same({ "2:0" }, chainIDs(ns.OverviewModel.Quests(index, state, 10, true)))
+		end)
+
+		it("lists each quest of a prerequisite loop once", function()
+			local _, index, state = setup({
+				[1] = { name = "A", zoneOrSort = 1, preQuestSingle = { 2 } },
+				[2] = { name = "B", zoneOrSort = 1, preQuestSingle = { 1 } },
+				[3] = { name = "C", zoneOrSort = 1, preQuestSingle = { 3 } },
+			}, { [1] = 10 })
+			assert.same({ "3:0", "1:0", "2:1" }, chainIDs(ns.OverviewModel.Quests(index, state, 10, true)))
+		end)
+
+		it("puts completed chains first and keeps a partial chain together", function()
+			local _, index, state = setup({
+				[1] = { name = "A", zoneOrSort = 1 },
+				[2] = { name = "A", zoneOrSort = 1, preQuestSingle = { 1 } },
+				[3] = { name = "Z", zoneOrSort = 1 },
+			}, { [1] = 10 })
+			flagged[1], flagged[3] = true, true
+			local rows = ns.OverviewModel.Quests(index, state, 10, true)
+			assert.same({ "3:0", "1:0", "2:1" }, chainIDs(rows))
+			assert.is_nil(rows[1].pre)
+			assert.is_nil(rows[1].children)
+		end)
+
+		it("groups a chain under the area of its first step", function()
+			local env, index, state = setup({
+				[1] = { name = "A", zoneOrSort = 900 },
+				[2] = { name = "B", zoneOrSort = 901, preQuestSingle = { 1 } },
+				[3] = { name = "C", zoneOrSort = 901 },
+			}, { [900] = 10, [901] = 10 })
+			local rows = ns.OverviewModel.QuestGroups(env, index, state, 10, true)
+			local kinds = {}
+			for _, r in ipairs(rows) do
+				table.insert(kinds, r.kind .. ":" .. (r.title or r.name))
+			end
+			assert.same({ "area:Area Name", "quest:A", "quest:B", "area:Other", "quest:C" }, kinds)
 		end)
 	end)
 
@@ -194,21 +274,63 @@ describe("OverviewModel", function()
 		end)
 	end)
 
+	describe("QuestGroups", function()
+		local function areas()
+			local env, index, state = setup({
+				[1] = { name = "Zeta", zoneOrSort = 900 },
+				[2] = { name = "Alpha", zoneOrSort = 900 },
+				[3] = { name = "Beta", zoneOrSort = 901 },
+			}, { [900] = 10, [901] = 10 })
+			return env, index, state
+		end
+
+		it("adds no header for a single area", function()
+			local env, index, state = setup({ [1] = { name = "a", zoneOrSort = 900 } }, { [900] = 10 })
+			local rows = ns.OverviewModel.QuestGroups(env, index, state, 10, true)
+			assert.equals(1, #rows)
+			assert.equals("quest", rows[1].kind)
+		end)
+
+		it("groups quests under an area header and puts unnamed areas last", function()
+			local env, index, state = areas()
+			flagged[1] = true
+			local rows = ns.OverviewModel.QuestGroups(env, index, state, 10, true)
+			local kinds = {}
+			for _, r in ipairs(rows) do
+				table.insert(kinds, r.kind .. ":" .. (r.title or r.name))
+			end
+			assert.same({ "area:Area Name", "quest:Zeta", "quest:Alpha", "area:Other", "quest:Beta" }, kinds)
+			assert.equals(1, rows[1].done)
+			assert.equals(2, rows[1].total)
+		end)
+	end)
+
 	describe("row text", function()
-		it("shows gold for complete maps and the unknown count", function()
-			local text = ns.OverviewModel.MapRowText({ name = "X", done = 2, total = 2, complete = true, unknown = 3 })
-			assert.is_truthy(text:find("|cffffd100X  2/2|r", 1, true))
+		it("colors the count gold when complete, grey when empty", function()
+			assert.equals("|cffffd1002/2|r", ns.OverviewModel.CountText(2, 2))
+			assert.equals("|cff9d9d9d0/2|r", ns.OverviewModel.CountText(0, 2))
+			assert.equals("1/2", ns.OverviewModel.CountText(1, 2))
+		end)
+		it("adds the unknown count to the map count", function()
+			local text = ns.OverviewModel.MapCountText({ done = 1, total = 2, unknown = 3 })
 			assert.is_truthy(text:find("+3 unknown", 1, true))
+			assert.is_truthy(text:find("1/2", 1, true))
+			assert.equals("1/2", ns.OverviewModel.MapCountText({ done = 1, total = 2, unknown = 0 }))
 		end)
-		it("shows plain text for an incomplete map without unknowns", function()
-			local text = ns.OverviewModel.MapRowText({ name = "X", done = 1, total = 2, complete = false, unknown = 0 })
-			assert.equals("X  1/2", text)
+		it("puts the level and the Forever icon before the name", function()
+			local icon = ns.OverviewModel.FOREVER_ICON
+			local row = { text = "Q", done = true, levelText = "[5]", forever = true }
+			assert.equals("[5] " .. icon .. " Q", ns.OverviewModel.QuestRowText(row))
+			row = { text = "Q", done = false, levelText = "", forever = false }
+			assert.equals("|cff9d9d9dQ|r", ns.OverviewModel.QuestRowText(row))
 		end)
-		it("adds tags and a done mark to quest rows", function()
-			local done = ns.OverviewModel.QuestRowText({ text = "Q", tags = "[Race]", done = true })
-			assert.is_truthy(done:find("ReadyCheck", 1, true))
-			assert.is_truthy(done:find("Q  [Race]", 1, true))
-			assert.equals("???", ns.OverviewModel.QuestRowText({ text = "???", tags = "", done = false }))
+		it("puts the pin icon first on a pinned quest", function()
+			local text = ns.OverviewModel.QuestRowText({ text = "Q", done = true, levelText = "[5]", pinned = true })
+			assert.equals(ns.OverviewModel.PIN_ICON .. " [5] Q", text)
+		end)
+		it("greys undone quest text", function()
+			assert.equals("Q", ns.OverviewModel.QuestRowText({ text = "Q", done = true }))
+			assert.equals("|cff9d9d9d???|r", ns.OverviewModel.QuestRowText({ text = "???", done = false }))
 		end)
 	end)
 end)

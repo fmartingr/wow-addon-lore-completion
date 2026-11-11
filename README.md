@@ -32,6 +32,27 @@ Unknown quests never change the `done / total` numbers.
 `/lore` opens the overview window. The left list shows maps grouped by continent, with `done/total` for each map.
 The right list shows the quests of the selected map. Undone quests show `???` until you enable `Show names`.
 
+Each quest shows its level. The level color uses the Blizzard difficulty colors for your character level:
+red, orange, yellow, green or grey. A blue `∞` icon marks a quest that only WoW Forever has.
+QuestieDB has no origin field, so the addon marks each quest with an ID of 10000 or higher as a Forever quest.
+
+Quest chains stay together. Each step shows below its prerequisite with more indent.
+Many chains have steps with the same name. The indent shows that they are different quests.
+A chain shows in the area of its first step. A completed chain shows before chains that are not complete.
+
+## Quest givers on the world map
+
+The world map shows no quest givers until you select them. Click a quest in the overview window to pin its quest giver.
+The quest row then shows a `!` icon, and the world map shows a `!` icon at the quest giver. Click the quest again to remove the pin.
+Pins are saved for each character. A completed quest has no pin.
+
+The map icon is yellow when one of its quests is available and not too low for you. Otherwise it is grey.
+A quest is available when your level is high enough and its prerequisites are done.
+The tooltip lists the pinned quests with their levels.
+
+The positions come from QuestieDB. You cannot pin a quest that starts from an item or has no known quest giver position.
+A quest giver with many spawn points shows at most 10 icons on one map.
+
 ## Tracker module and settings
 
 The `Lore` module sits at the top of the Objective Tracker. It shows the progress of your current map.

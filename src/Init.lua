@@ -6,7 +6,7 @@ ns.Init = {}
 
 function ns.Init.Check(env)
 	if not env.LibQuestieDB then
-		return false, "LoreCompletion: QuestieDB not found"
+		return false, ns.L["LoreCompletion: QuestieDB not found"]
 	end
 	local ok, message = env.LibQuestieDB.RequireContract(ns.CONTRACT)
 	if not ok then
@@ -41,7 +41,8 @@ function ns.Init.OnLoad(env)
 		LoreCompletionDB or {},
 		{ showTracker = true, hideWhenComplete = false, showNames = false }
 	)
-	LoreCompletionCharDB = ns.Init.ApplyDefaults(LoreCompletionCharDB or {}, { unknownQuests = {} })
+	LoreCompletionCharDB =
+		ns.Init.ApplyDefaults(LoreCompletionCharDB or {}, { unknownQuests = {}, pinned = {}, completedZones = {} })
 	for _, fn in ipairs(ns.onReady) do
 		fn(env)
 	end
@@ -51,12 +52,18 @@ function ns.Init.BuildEnv()
 	return {
 		LibQuestieDB = LibQuestieDB,
 		QuestDB = QuestDB,
+		NpcDB = NpcDB,
+		ObjectDB = ObjectDB,
 		C_Map = C_Map,
 		C_QuestLog = C_QuestLog,
 		UnitFactionGroup = UnitFactionGroup,
 		UnitClass = UnitClass,
 		UnitRace = UnitRace,
+		UnitLevel = UnitLevel,
+		UnitQuestTrivialLevelRange = UnitQuestTrivialLevelRange,
+		GetQuestGreenRange = GetQuestGreenRange,
 		Enum = Enum,
+		Memories = Memories,
 		print = print,
 	}
 end

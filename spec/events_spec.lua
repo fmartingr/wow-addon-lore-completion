@@ -4,12 +4,17 @@ local newEnv = require("spec.helpers.env")
 
 local PATHS = {
 	"src/Init.lua",
+	"src/Locale.lua",
 	"src/Bits.lua",
+	"src/QuestLevel.lua",
 	"src/QuestFilter.lua",
 	"src/QuestIndex.lua",
 	"src/Progress.lua",
 	"src/QuestState.lua",
 	"src/Events.lua",
+	"src/ZoneMemory.lua",
+	"src/OverviewModel.lua",
+	"src/GiverModel.lua",
 }
 
 describe("Events", function()
@@ -95,6 +100,19 @@ describe("Events", function()
 		assert.is_true(ns.state:IsDone(1))
 		assert.is_not_nil(loader.G.LoreCompletionCharDB.unknownQuests[77])
 		assert.equals(2, refreshed)
+		loader.G.LoreCompletionDB, loader.G.LoreCompletionCharDB = nil, nil
+	end)
+
+	it("PLAYER_LEVEL_UP stores the new level and refreshes", function()
+		loader.G.LoreCompletionDB, loader.G.LoreCompletionCharDB = nil, nil
+		ns.Init.OnLoad(newEnv(fake({}), { print = _G.print }))
+		local refreshed = 0
+		ns.OnRefresh(function()
+			refreshed = refreshed + 1
+		end)
+		frame:Fire("PLAYER_LEVEL_UP", 12)
+		assert.equals(12, ns.playerLevel)
+		assert.equals(1, refreshed)
 		loader.G.LoreCompletionDB, loader.G.LoreCompletionCharDB = nil, nil
 	end)
 end)

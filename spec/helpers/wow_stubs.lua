@@ -97,6 +97,9 @@ function M.new()
 		UnitRace = function()
 			return "Human", "Human", 1
 		end,
+		GetLocale = function()
+			return "enUS"
+		end,
 		print = function(...)
 			table.insert(ctx.printed, table.concat({ ... }, " "))
 		end,

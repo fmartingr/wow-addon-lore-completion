@@ -37,6 +37,7 @@ describe("SettingsPanel", function()
 		assert.is_false(hide.default)
 		assert.equals("boolean", show.varType)
 		assert.equals(loader.G.LoreCompletionDB, show.tbl)
+		assert.same({}, loader.G.LoreCompletionCharDB.pinned)
 	end)
 
 	it("runs a refresh when a value changes", function()

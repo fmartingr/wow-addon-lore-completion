@@ -5,7 +5,7 @@ local GOLD = { 1, 0.82, 0 }
 ns.TrackerModule = {}
 
 local mixin = CreateFromMixins(ObjectiveTrackerModuleMixin)
-mixin.headerText = "Lore"
+mixin.headerText = ns.L["Lore"]
 ns.TrackerModule.mixin = mixin
 
 function mixin:LayoutContents()
@@ -40,7 +40,7 @@ end
 local function register()
 	local frame = CreateFrame("Frame", "LoreCompletionTrackerModule", nil, "ObjectiveTrackerModuleTemplate")
 	Mixin(frame, mixin)
-	frame:SetHeader("Lore")
+	frame:SetHeader(ns.L["Lore"])
 	frame.uiOrder = 0
 	ns.trackerFrame = frame
 	-- Blizzard may add the container after this callback runs, so one retry on the next frame is allowed.
@@ -49,7 +49,7 @@ local function register()
 	end
 	C_Timer.After(0, function()
 		if not attach(frame) then
-			print("LoreCompletion: tracker module not available")
+			print(ns.L["LoreCompletion: tracker module not available"])
 		end
 	end)
 end

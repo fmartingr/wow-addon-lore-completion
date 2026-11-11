@@ -23,8 +23,8 @@ function ns.TrackerModel.Build(env, index, state, db)
 	local info = env.C_Map.GetMapInfo(uiMapID)
 	return {
 		uiMapID = uiMapID,
-		title = (info and info.name) or ("Map " .. uiMapID),
-		text = complete and "Complete" or ("%d / %d quests"):format(done, total),
+		title = (info and info.name) or ns.L["Map %d"]:format(uiMapID),
+		text = complete and ns.L["Complete"] or ns.L["%d / %d quests"]:format(done, total),
 		percent = math.floor(done / total * 100),
 		complete = complete,
 	}

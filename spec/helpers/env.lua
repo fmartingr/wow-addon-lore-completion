@@ -3,6 +3,8 @@ return function(lib, overrides)
 	local env = {
 		LibQuestieDB = lib,
 		QuestDB = lib and lib.Quest,
+		NpcDB = lib and lib.Npc,
+		ObjectDB = lib and lib.Object,
 		UnitFactionGroup = function()
 			return "Alliance", "Alliance"
 		end,

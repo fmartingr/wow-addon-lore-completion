@@ -4,7 +4,7 @@ local fake = require("spec.helpers.questiedb_fake")
 describe("Init", function()
 	local ns, ctx
 	before_each(function()
-		ns, ctx = loader.load({ "src/Init.lua" })
+		ns, ctx = loader.load({ "src/Init.lua", "src/Locale.lua" })
 	end)
 	after_each(loader.reset)
 
