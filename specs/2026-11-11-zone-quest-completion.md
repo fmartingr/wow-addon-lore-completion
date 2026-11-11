@@ -301,7 +301,7 @@ Commit each task on its own with the repository's commit convention (none exists
   - [ ] Docs and config that describe the changed behavior are updated (`README.md`: unknown quests).
   - [ ] Task heading checkbox ticked; changes committed.
 
-### [ ] 4. Overview window and `/lore`
+### [x] 4. Overview window and `/lore`
 - **Outcome:** `/lore` opens a window with maps grouped by continent and the quest list of the selected map.
 - **Depends on:** 2 (index, progress), 3 (`IsDone`, `UnknownCount`, `ns.OnRefresh`).
 - **Covers:** AC10, risks "legacy dungeon UiMapIDs" (window part), "ZoneDB support data missing" (window part), "no e2e" (row builders tested).

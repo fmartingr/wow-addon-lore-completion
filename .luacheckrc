@@ -18,6 +18,7 @@ read_globals = {
 	"Settings",
 	"ScrollUtil",
 	"CreateScrollBoxListLinearView",
+	"CreateDataProvider",
 	"Mixin",
 	"CreateFromMixins",
 	"Enum",

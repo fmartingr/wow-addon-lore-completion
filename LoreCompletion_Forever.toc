@@ -13,3 +13,5 @@ src\QuestIndex.lua
 src\Progress.lua
 src\QuestState.lua
 src\Events.lua
+src\OverviewModel.lua
+src\OverviewWindow.lua

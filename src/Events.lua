@@ -44,6 +44,7 @@ function ns.RunRefresh()
 end
 
 table.insert(ns.onReady, function(env)
+	ns.env = env
 	ns.index = ns.QuestIndex.New(env)
 	ns.state = ns.QuestState.New(env, LoreCompletionCharDB)
 	ns.Events.On("QUEST_TURNED_IN", function(questID)

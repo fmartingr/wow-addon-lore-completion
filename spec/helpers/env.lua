@@ -28,6 +28,7 @@ return function(lib, overrides)
 				return false
 			end,
 		},
+		Enum = { UIMapType = { Cosmic = 0, World = 1, Continent = 2, Zone = 3, Dungeon = 4, Micro = 5, Orphan = 6 } },
 		print = function() end,
 	}
 	for key, value in pairs(overrides or {}) do

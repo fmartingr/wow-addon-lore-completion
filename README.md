@@ -23,6 +23,11 @@ QuestieDB data for Forever is not complete. When you turn in a quest that Questi
 the addon saves the quest and the map for your character. The count shows as `+N unknown`.
 Unknown quests never change the `done / total` numbers.
 
+## Overview window
+
+`/lore` opens the overview window. The left list shows maps grouped by continent, with `done/total` for each map.
+The right list shows the quests of the selected map. Undone quests show `???` until you enable `Show names`.
+
 ## Development
 
 - `make lint` runs luacheck.
