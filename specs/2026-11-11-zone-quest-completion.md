@@ -376,7 +376,7 @@ Commit each task on its own with the repository's commit convention (none exists
   - [ ] Docs and config that describe the changed behavior are updated (`README.md`: tracker module and settings).
   - [ ] Task heading checkbox ticked; changes committed.
 
-### [ ] 6. CI and release packaging
+### [x] 6. CI and release packaging
 - **Outcome:** GitHub Actions runs `make check` on push and pull request. A `v*` tag packages and uploads the addon to CurseForge.
 - **Depends on:** 1 (Makefile targets, TOC with `@project-version@`).
 - **Covers:** AC11 (CI part), AC12, risks "packager does not know `_Forever`" and "no remote".

@@ -42,6 +42,24 @@ The `LoreCompletion` category in the Settings panel has two options: `Show track
 - `make coverage` writes `luacov.report.out`.
 - `make check` runs lint, fmt-check and test.
 
+## CI and release
+
+- GitHub Actions runs lint, format check and tests on each push and pull request.
+- A tag `v*` starts the release workflow. It packages the addon with the BigWigs packager.
+- The upload to CurseForge needs the secret `CF_API_KEY` and a `## X-Curse-Project-ID:` line in the TOC file.
+  Without them, the packager builds the zip and skips the upload.
+- The packager v2.7.0 does not search for `_Forever.toc`. The workflow copies the file to `_Camelot.toc` and passes `-g forever`.
+  This was read from the packager source. It was not run, so check the first release log for the detected game version.
+
+## CI and release
+
+- GitHub Actions runs lint, format check and tests on each push and pull request.
+- A tag `v*` starts the release workflow. It packages the addon with the BigWigs packager.
+- The upload to CurseForge needs the secret `CF_API_KEY` and a `## X-Curse-Project-ID:` line in the TOC file.
+  Without them, the packager builds the zip and skips the upload.
+- The packager v2.7.0 does not search for `_Forever.toc`. The workflow copies the file to `_Camelot.toc` and passes `-g forever`.
+  This was read from the packager source. It was not run, so check the first release log for the detected game version.
+
 ## License
 
 MIT.

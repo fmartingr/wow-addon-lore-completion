@@ -1,0 +1,10 @@
+package-as: LoreCompletion
+ignore:
+  - spec
+  - specs
+  - Makefile
+  - .busted
+  - .luacov
+  - .luacheckrc
+  - stylua.toml
+  - .styluaignore

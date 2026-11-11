@@ -1,0 +1,21 @@
+name: Release
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      # The packager v2.7.0 looks for a *_Camelot.toc file and does not know the *_Forever.toc suffix.
+      - name: Add TOC name that the packager finds
+        run: cp LoreCompletion_Forever.toc LoreCompletion_Camelot.toc
+      - uses: BigWigsMods/packager@v2
+        with:
+          args: -g forever
+        env:
+          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
