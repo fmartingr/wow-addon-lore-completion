@@ -15,3 +15,6 @@ src\QuestState.lua
 src\Events.lua
 src\OverviewModel.lua
 src\OverviewWindow.lua
+src\TrackerModel.lua
+src\TrackerModule.lua
+src\SettingsPanel.lua

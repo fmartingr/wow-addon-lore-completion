@@ -337,7 +337,7 @@ Commit each task on its own with the repository's commit convention (none exists
   - [ ] Docs and config that describe the changed behavior are updated (`README.md`: `/lore`, window, `Show names`).
   - [ ] Task heading checkbox ticked; changes committed.
 
-### [ ] 5. Tracker module and settings panel
+### [x] 5. Tracker module and settings panel
 - **Outcome:** the `Lore` module at the top of the Objective Tracker, and the two settings.
 - **Depends on:** 2 (index, progress), 3 (`IsDone`, `ns.OnRefresh`, `ns.RunRefresh`, `ns.Events`), 4 (`ns.Overview.OpenMap` for the click).
 - **Covers:** AC7, AC8, AC9, risk "Blizzard changes the tracker API", risk "no e2e" (model tested).

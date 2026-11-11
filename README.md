@@ -28,6 +28,12 @@ Unknown quests never change the `done / total` numbers.
 `/lore` opens the overview window. The left list shows maps grouped by continent, with `done/total` for each map.
 The right list shows the quests of the selected map. Undone quests show `???` until you enable `Show names`.
 
+## Tracker module and settings
+
+The `Lore` module sits at the top of the Objective Tracker. It shows the progress of your current map.
+The bar turns gold when the map is complete. Click the map name to open the overview window.
+The `LoreCompletion` category in the Settings panel has two options: `Show tracker module` and `Hide when complete`.
+
 ## Development
 
 - `make lint` runs luacheck.

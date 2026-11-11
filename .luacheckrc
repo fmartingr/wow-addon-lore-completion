@@ -27,6 +27,7 @@ read_globals = {
 	"UIParent",
 	"UISpecialFrames",
 	"EventUtil",
+	"C_Timer",
 	"NORMAL_FONT_COLOR",
 	"tinsert",
 	"wipe",
