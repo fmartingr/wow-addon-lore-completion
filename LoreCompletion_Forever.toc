@@ -2,6 +2,7 @@
 ## Title: LoreCompletion
 ## Notes: Quest completion per map for WoW Forever.
 ## Author: Felipe M.
+## X-Curse-Project-ID: 1798192
 ## IconTexture: Interface\AddOns\LoreCompletion\assets\icon-256.png
 ## Version: @project-version@
 ## Dependencies: QuestieDB
