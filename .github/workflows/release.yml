@@ -19,5 +19,5 @@ jobs:
         with:
           args: -g forever
         env:
-          CF_API_KEY: ${{ secrets.CF_API_KEY }}
+          CF_API_KEY: ${{ secrets.CF_API_TOKEN }}
           GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}
