@@ -1,0 +1,9 @@
+## Interface: 16001
+## Title: LoreCompletion
+## Notes: Quest completion per map for WoW Forever.
+## Author: Felipe M.
+## Version: @project-version@
+## Dependencies: QuestieDB
+## SavedVariables: LoreCompletionDB
+## SavedVariablesPerCharacter: LoreCompletionCharDB
+src\Init.lua
