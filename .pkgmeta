@@ -8,3 +8,4 @@ ignore:
   - .luacheckrc
   - stylua.toml
   - .styluaignore
+  - assets/icon.png
