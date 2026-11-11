@@ -26,14 +26,18 @@ function Index:Build()
 		return
 	end
 	self.built = true
+	self.error = nil
 	local env = self.env
-	local areaToMap = loadAreaMap(env)
+	self.areaToMap = self.areaToMap or loadAreaMap(env)
+	local areaToMap = self.areaToMap
 	if not areaToMap then
 		self.error = "zonedata"
 		return
 	end
 	local player = ns.QuestFilter.Player(env)
 	if not player then
+		-- A neutral character can pick a faction later, so the next call retries.
+		self.built = false
 		self.error = "player"
 		return
 	end

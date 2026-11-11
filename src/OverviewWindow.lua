@@ -65,13 +65,13 @@ local function rebuild()
 				table.insert(rows, { kind = "map", map = map })
 			end
 		end
-		mapBox:SetDataProvider(CreateDataProvider(rows))
+		mapBox:SetDataProvider(CreateDataProvider(rows), ScrollBoxConstants.RetainScrollPosition)
 	end
 	local quests = {}
 	if selectedMap then
 		quests = ns.OverviewModel.Quests(index, state, selectedMap, LoreCompletionDB.showNames)
 	end
-	questBox:SetDataProvider(CreateDataProvider(quests))
+	questBox:SetDataProvider(CreateDataProvider(quests), ScrollBoxConstants.RetainScrollPosition)
 end
 
 function ns.Overview.Rebuild()
@@ -116,6 +116,8 @@ local function ensureFrame()
 		namesCheck:SetChecked(LoreCompletionDB.showNames)
 		rebuild()
 	end)
+	-- ButtonFrameTemplate frames start shown, so the first Toggle would hide them.
+	frame:Hide()
 end
 
 function ns.Overview.Toggle()

@@ -23,8 +23,9 @@ end
 
 function State:UnknownCount(uiMapID)
 	local count = 0
-	for _, mapID in pairs(self.charDB.unknownQuests) do
-		if mapID == uiMapID then
+	for id, mapID in pairs(self.charDB.unknownQuests) do
+		-- QuestieDB may learn the quest later. Then it counts in done/total instead.
+		if mapID == uiMapID and not self.env.QuestDB.Exists(id) then
 			count = count + 1
 		end
 	end

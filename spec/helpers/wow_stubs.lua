@@ -10,6 +10,7 @@ local function newFrame(ctx, frameType, name, parent, template)
 		calls = {},
 		scripts = {},
 		events = {},
+		shown = true, -- real frames start shown
 	}
 	function frame:RegisterEvent(event)
 		self.events[event] = true
@@ -101,6 +102,7 @@ function M.new()
 		end,
 		SlashCmdList = {},
 		UIParent = {},
+		ScrollBoxConstants = { RetainScrollPosition = true },
 		UISpecialFrames = {},
 		tinsert = table.insert,
 		CreateDataProvider = function(data)

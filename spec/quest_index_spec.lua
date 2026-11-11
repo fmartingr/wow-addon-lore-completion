@@ -111,6 +111,19 @@ describe("QuestIndex", function()
 		assert.equals("zonedata", index.error)
 	end)
 
+	it("retries after a player error", function()
+		local faction = "Neutral"
+		local index = build({
+			UnitFactionGroup = function()
+				return faction
+			end,
+		})
+		assert.same({}, index:Maps())
+		faction = "Alliance"
+		assert.same({ 10, 20 }, index:Maps())
+		assert.is_nil(index.error)
+	end)
+
 	it("sets error for a neutral player", function()
 		local index = build({
 			UnitFactionGroup = function()

@@ -64,6 +64,11 @@ describe("QuestState", function()
 		assert.equals(1, state:UnknownCount(5))
 	end)
 
+	it("ignores saved unknown quests that QuestieDB knows now", function()
+		charDB.unknownQuests[1] = 5
+		assert.equals(0, state:UnknownCount(5))
+	end)
+
 	it("counts unknown quests per map", function()
 		state:OnTurnedIn(98)
 		state:OnTurnedIn(99)
