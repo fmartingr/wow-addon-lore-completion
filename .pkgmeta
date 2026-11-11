@@ -9,3 +9,8 @@ ignore:
   - stylua.toml
   - .styluaignore
   - assets/icon.png
+optional-dependencies:
+  - openmap
+  - memories
+required-dependencies:
+  - questiedb
